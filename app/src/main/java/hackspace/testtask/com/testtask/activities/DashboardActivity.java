@@ -62,8 +62,10 @@ public class DashboardActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.btnBackup:
+                    backup();
                     break;
                 case R.id.btnRestore:
+                    restore();
                     break;
                 case R.id.btnExit:
                     finish();
@@ -71,3 +73,69 @@ public class DashboardActivity extends AppCompatActivity {
         }
     };
 
+    public void backup() {
+        String filename = getString(R.string.file_name);
+
+        List<RssItem> rssItems = RssBusiness.getRssItems(this);
+        Gson gson = new Gson();
+        String rssItemInJson;
+
+        try {
+            this.deleteFile(filename);
+            FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            BufferedWriter bfWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+
+            for (RssItem rssItem : rssItems) {
+                rssItemInJson = gson.toJson(rssItem);
+                bfWriter.write(rssItemInJson);
+                bfWriter.newLine();
+            }
+            bfWriter.close();
+            Toast.makeText(DashboardActivity.this, getString(R.string.backuped), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.error_message) + e.getMessage())
+                    .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
+    public void restore() {
+        String filename = getString(R.string.file_name);
+
+        List<RssItem> rssItems = new ArrayList<>();
+        Gson gson = new Gson();
+
+        try {
+            FileInputStream fis = this.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+
+            String rssItemFromJson;
+            while ((rssItemFromJson = bufferedReader.readLine()) != null) {
+                RssItem rssItem = gson.fromJson(rssItemFromJson, RssItem.class);
+                rssItems.add(rssItem);
+            }
+            RssBusiness.setRssItems(rssItems, this);
+
+            bufferedReader.close();
+            Toast.makeText(DashboardActivity.this, getString(R.string.restored), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.error_message) + e.getMessage())
+                    .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
+}
