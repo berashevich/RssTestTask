@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TestTask</string>
+    <string name="action_settings">Settings</string>
+    <string name="rss">RSS</string>
+    <string name="backup">BACKUP</string>
+    <string name="restore">RESTORE</string>
+    <string name="exit">EXIT</string>
+    <string name="backuped">Backuped</string>
+    <string name="restored">Restored</string>
+
+    <string name="ok_button">OK</string>
+    <string name="error_message">ERROR = </string>
+    <string name="please_wait">Please, wait…</string>
+
+    <string name="refresh">Refresh</string>
+    <string name="delete">Delete</string>
+    <string name="nothing_to_delete">Nothing to delete!</string>
+
+    <string name="file_name">rss.json</string>
+</resources>
