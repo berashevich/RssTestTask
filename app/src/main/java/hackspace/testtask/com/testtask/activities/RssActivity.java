@@ -74,11 +74,17 @@ public class RssActivity extends AppCompatActivity{
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_rss, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refreshBtn:
+
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 }
