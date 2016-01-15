@@ -25,6 +25,8 @@ import hackspace.testtask.com.testtask.rss.RVAdapter;
 import hackspace.testtask.com.testtask.services.RssDownloadService;
 
 public class RssActivity extends AppCompatActivity{
+    RecyclerView rv;
+    RVAdapter adapter;
 
     @Override
     protected void onStart() {
@@ -36,6 +38,12 @@ public class RssActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss);
+
+
+        rv = (RecyclerView)findViewById(R.id.rv);
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
 
     }
 
