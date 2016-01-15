@@ -25,8 +25,47 @@ import hackspace.testtask.com.testtask.rss.RVAdapter;
 import hackspace.testtask.com.testtask.services.RssDownloadService;
 
 public class RssActivity extends AppCompatActivity{
+    UpdateBdReceiver updateBdReceiver = null;
+    Boolean updateBdReceiverIsRegistered = false;
     RecyclerView rv;
     RVAdapter adapter;
+
+
+    class UpdateBdReceiver extends BroadcastReceiver
+    {
+        ProgressDialog pd = null;
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase(RssDownloadService.SERVICE_UPDATING_BD)){
+
+                    pd = new ProgressDialog(context);
+                    pd.setMessage(getString(R.string.please_wait));
+                    pd.show();
+
+                serviceIsRunning = true;
+
+            } else if (action.equalsIgnoreCase(RssDownloadService.BD_UPDATED)) {
+
+            } else if (action.equalsIgnoreCase(RssDownloadService.SERVICE_FINISHED))  {
+                pd.dismiss();
+
+                if (intent.getStringExtra(RssDownloadService.SERVICE_ERROR) != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(intent.getStringExtra(RssDownloadService.SERVICE_ERROR))
+                            .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                serviceIsRunning = false;
+            }
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -39,6 +78,7 @@ public class RssActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rss);
 
+        updateBdReceiver = new UpdateBdReceiver();
 
         rv = (RecyclerView)findViewById(R.id.rv);
 
@@ -54,11 +94,23 @@ public class RssActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        if (!updateBdReceiverIsRegistered) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(RssDownloadService.SERVICE_UPDATING_BD);
+            intentFilter.addAction(RssDownloadService.BD_UPDATED);
+            intentFilter.addAction(RssDownloadService.SERVICE_FINISHED);
+            registerReceiver(updateBdReceiver, intentFilter);
+            updateBdReceiverIsRegistered = true;
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (updateBdReceiverIsRegistered) {
+            unregisterReceiver(updateBdReceiver);
+            updateBdReceiverIsRegistered = false;
+        }
     }
 
     @Override
