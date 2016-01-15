@@ -70,6 +70,7 @@ public class RssActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
 
+        adapter.mActionModeCallback.onDestroyActionMode(RVAdapter.getActionMode());
     }
 
     @Override

@@ -38,8 +38,26 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
             image = (ImageView)itemView.findViewById(R.id.image);
         }
 
+        public void selectRssItemView(CardView cv) {
+            cv.setCardBackgroundColor(0xFFC5D2C0);
+            cv.invalidate();
+            selectedRow = this.getPosition();
+            selectedCardView = cv;
+        }
+
+        public static void deselectRssItemView(CardView cv) {
+            if (selectedCardView == null) {
+                return;
+            }
+            cv.setCardBackgroundColor(0xfffffbfb);
+            cv.invalidate();
+            selectedRow = -1;
+            selectedCardView = null;
+        }
     }
 
+    static CardView selectedCardView = null;
+    static int selectedRow;
     static List<RssItem> rssItems;
     public RVAdapter(List<RssItem> rssItems) {
         this.rssItems = rssItems;
@@ -51,6 +69,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
     }
 
     static Context context;
+    static ActionMode actionMode = null;
+
+    public static ActionMode getActionMode() {
+        return actionMode;
+    }
 
     @Override
     public RssItemView onCreateViewHolder(final ViewGroup viewGroup, int i) {
@@ -59,6 +82,31 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
 
         final RssItemView riv = new RssItemView(v);
 
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            public boolean onLongClick(View view) {
+                if (actionMode != null) {
+                    return false;
+                }
+                actionMode = ((Activity) context).startActionMode(mActionModeCallback);
+                riv.selectRssItemView(riv.cv);
+                return true;
+            }
+        });
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (actionMode == null) {
+                    return;
+                }
+                if (riv.cv == selectedCardView) {
+                    RssItemView.deselectRssItemView(selectedCardView);
+                } else {
+                    RssItemView.deselectRssItemView(selectedCardView);
+                    riv.selectRssItemView(riv.cv);
+                }
+            }
+        });
 
         return riv;
     }
@@ -81,4 +129,36 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+    public ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_rss_action_mode, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.deleteBtn:
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+            RssItemView.deselectRssItemView(selectedCardView);
+        }
+    };
 
