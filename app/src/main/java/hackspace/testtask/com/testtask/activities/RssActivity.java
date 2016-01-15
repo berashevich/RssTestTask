@@ -45,6 +45,10 @@ public class RssActivity extends AppCompatActivity{
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
 
+        List<RssItem> rssItems = RssBusiness.getRssItems(this);
+
+        adapter = new RVAdapter(rssItems);
+        rv.setAdapter(adapter);
     }
 
     @Override
