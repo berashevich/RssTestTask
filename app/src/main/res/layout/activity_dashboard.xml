@@ -4,4 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/dashboardLayout"
+        android:paddingTop="50dp">
+        <Button
+            style="@style/dashboardButton"
+            android:text="@string/rss"
+            android:id="@+id/btnRss" />
+        <Button
+            style="@style/dashboardButton"
+            android:text="@string/backup"
+            android:id="@+id/btnBackup" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/dashboardLayout"
+        android:paddingBottom="50dp">
+        <Button
+            style="@style/dashboardButton"
+            android:text="@string/restore"
+            android:id="@+id/btnRestore" />
+        <Button
+            style="@style/dashboardButton"
+            android:text="@string/exit"
+            android:id="@+id/btnExit" />
+    </LinearLayout>
+
 </LinearLayout>
