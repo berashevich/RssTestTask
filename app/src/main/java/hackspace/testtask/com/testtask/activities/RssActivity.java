@@ -27,8 +27,10 @@ import hackspace.testtask.com.testtask.services.RssDownloadService;
 public class RssActivity extends AppCompatActivity{
     UpdateBdReceiver updateBdReceiver = null;
     Boolean updateBdReceiverIsRegistered = false;
+    Boolean serviceIsRunning = false;
     RecyclerView rv;
     RVAdapter adapter;
+    private static final String SERVICE_IS_RUNNING = "hackspace.testtask.com.activities.SERVICE_IS_RUNNING";
 
     private class UpdateRecycleViewTask extends AsyncTask<Context, Void, Void> {
         Context context;
@@ -93,6 +95,17 @@ public class RssActivity extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
 
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        serviceIsRunning = sharedPref.getBoolean(SERVICE_IS_RUNNING, false);
+
+        if (serviceIsRunning) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SERVICE_IS_RUNNING, false);
+            editor.commit();
+
+            Intent intent = new Intent(this, RssDownloadService.class);
+            startService(intent);
+        }
     }
 
     @Override
@@ -138,6 +151,15 @@ public class RssActivity extends AppCompatActivity{
     @Override
     protected void onStop() {
         super.onStop();
+        if (serviceIsRunning) {
+            Intent intent = new Intent(this, RssDownloadService.class);
+            stopService(intent);
+
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SERVICE_IS_RUNNING, true);
+            editor.commit();
+        }
     }
 
     @Override
@@ -157,6 +179,10 @@ public class RssActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refreshBtn:
+                if (serviceIsRunning) break;
+
+                Intent intent = new Intent(this, RssDownloadService.class);
+                startService(intent);
 
                 break;
         }
