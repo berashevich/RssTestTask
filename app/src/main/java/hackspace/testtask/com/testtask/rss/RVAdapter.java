@@ -148,6 +148,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.deleteBtn:
+                    removeAt(selectedRow);
+                    selectedRow = -1;
                     break;
                 default:
                     break;
@@ -162,3 +164,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
         }
     };
 
+    public void removeAt(int position) {
+        if (rssItems.size() == 0) {
+            Toast.makeText(context, context.getString(R.string.nothing_to_delete), Toast.LENGTH_SHORT).show();
+            return;
+        } else if (selectedRow == -1) {
+            return;
+        }
+        rssItems = RssBusiness.delete(rssItems.get(position), context);
+        RssItemView.deselectRssItemView(selectedCardView);
+        notifyItemRemoved(position);
+    }
+}

@@ -20,3 +20,10 @@ public class RssBusiness {
 
         return rssItems;
     }
+
+    public static List<RssItem> delete(RssItem rssItem, Context context) {
+
+        rssItems.remove(rssItem);
+        return rssItems;
+    }
+}
