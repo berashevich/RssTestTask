@@ -30,6 +30,27 @@ public class RssActivity extends AppCompatActivity{
     RecyclerView rv;
     RVAdapter adapter;
 
+    private class UpdateRecycleViewTask extends AsyncTask<Context, Void, Void> {
+        Context context;
+
+        @Override
+        protected Void doInBackground(Context... contexts) {
+            context = contexts[0];
+            List<RssItem> rssItems = RssBusiness.getRssItems(context);
+            adapter = new RVAdapter(rssItems);
+            publishProgress();
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            rv.setAdapter(adapter);
+        }
+
+        @Override
+        protected void onPostExecute(Void value) {
+        }
+    }
 
     class UpdateBdReceiver extends BroadcastReceiver
     {
@@ -47,6 +68,7 @@ public class RssActivity extends AppCompatActivity{
                 serviceIsRunning = true;
 
             } else if (action.equalsIgnoreCase(RssDownloadService.BD_UPDATED)) {
+                new UpdateRecycleViewTask().execute(context);
 
             } else if (action.equalsIgnoreCase(RssDownloadService.SERVICE_FINISHED))  {
                 pd.dismiss();
