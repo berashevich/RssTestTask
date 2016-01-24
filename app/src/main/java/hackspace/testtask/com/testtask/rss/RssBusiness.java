@@ -11,12 +11,9 @@ import java.util.List;
 
 import hackspace.testtask.com.testtask.rssDataBase.RssDbHelper;
 
-//TODO AL_PB Why you using static methods of instead new Instance().methodName() ?
 public class RssBusiness {
-    private static List<RssItem> rssItems;
-
-    public static List<RssItem> getRssItems(Context context) {
-        rssItems = new ArrayList<>();
+    public List<RssItem> getRssItems(Context context) {
+        List<RssItem> rssItems = new ArrayList<>();
 
         RssDbHelper mDbHelper = new RssDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -44,7 +41,7 @@ public class RssBusiness {
         return rssItems;
     }
 
-    public static boolean setRssItems(List<RssItem> rssItems, Context context) {
+    public boolean setRssItems(List<RssItem> rssItems, Context context) {
         boolean isBdUpdated = true;
         RssDbHelper mDbHelper = new RssDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -70,7 +67,7 @@ public class RssBusiness {
         return isBdUpdated;
     }
 
-    public static List<RssItem> delete(RssItem rssItem, Context context) {
+    public void delete(RssItem rssItem, Context context) {
         RssDbHelper mDbHelper = new RssDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -79,8 +76,5 @@ public class RssBusiness {
         String[] selectionArgs = { rssItem.getTitle() };
 
         db.delete(RssEntry.TABLE_NAME, selection, selectionArgs);
-
-        rssItems.remove(rssItem);
-        return rssItems;
     }
 }

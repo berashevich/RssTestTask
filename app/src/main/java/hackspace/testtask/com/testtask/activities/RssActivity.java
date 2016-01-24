@@ -40,7 +40,7 @@ public class RssActivity extends AppCompatActivity{
         @Override
         protected Void doInBackground(Context... contexts) {
             context = contexts[0];
-            List<RssItem> rssItems = RssBusiness.getRssItems(context);
+            List<RssItem> rssItems = new RssBusiness().getRssItems(context);
             mAdapter = new RVAdapter(rssItems);
             publishProgress();
             return null;
@@ -123,7 +123,7 @@ public class RssActivity extends AppCompatActivity{
         LinearLayoutManager llm = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(llm);
 
-        List<RssItem> rssItems = RssBusiness.getRssItems(this);
+        List<RssItem> rssItems = new RssBusiness().getRssItems(this);
 
         mAdapter = new RVAdapter(rssItems);
         mRecyclerView.setAdapter(mAdapter);

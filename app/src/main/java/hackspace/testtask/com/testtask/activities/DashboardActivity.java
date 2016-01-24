@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void backup() {
-        List<RssItem> rssItems = RssBusiness.getRssItems(this);
+        List<RssItem> rssItems = new RssBusiness().getRssItems(this);
         Gson gson = new Gson();
         String rssItemInJson;
 
@@ -123,7 +123,7 @@ public class DashboardActivity extends AppCompatActivity {
                 RssItem rssItem = gson.fromJson(rssItemFromJson, RssItem.class);
                 rssItems.add(rssItem);
             }
-            RssBusiness.setRssItems(rssItems, this);
+            new RssBusiness().setRssItems(rssItems, this);
 
             Toast.makeText(DashboardActivity.this, getString(R.string.restored), Toast.LENGTH_LONG).show();
         } catch (Exception e) {

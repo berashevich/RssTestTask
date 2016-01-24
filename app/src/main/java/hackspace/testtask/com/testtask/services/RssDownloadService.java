@@ -34,7 +34,7 @@ public class RssDownloadService extends IntentService {
 
             while (mRssParser.parsingComplete);
 
-            boolean isBdUpdated = RssBusiness.setRssItems(mRssParser.getParsedItems(), this);
+            boolean isBdUpdated = new RssBusiness().setRssItems(mRssParser.getParsedItems(), this);
 
             if (isBdUpdated) {
                 intentToSend = new Intent(BD_UPDATED);

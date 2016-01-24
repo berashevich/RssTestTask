@@ -175,7 +175,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
         } else if (sSelectedRow == -1) {
             return;
         }
-        sRssItems = RssBusiness.delete(sRssItems.get(position), sContext);
+        new RssBusiness().delete(sRssItems.get(position), sContext);
+        sRssItems.remove(position);
         RssItemView.deselectRssItemView(sSelectedCardView);
         notifyItemRemoved(position);
     }
