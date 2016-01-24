@@ -57,7 +57,9 @@ public class DashboardActivity extends AppCompatActivity {
                     break;
                 case R.id.mExitButton:
                     finish();
-                    // TODO SM_PB: break; + default must be here - that's a rule
+                    break;
+                default:
+                    break;
             }
         }
     };
