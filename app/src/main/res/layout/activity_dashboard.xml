@@ -12,11 +12,11 @@
         <Button
             style="@style/dashboardButton"
             android:text="@string/rss"
-            android:id="@+id/btnRss" />
+            android:id="@+id/mRssButton" />
         <Button
             style="@style/dashboardButton"
             android:text="@string/backup"
-            android:id="@+id/btnBackup" />
+            android:id="@+id/mBackupButton" />
     </LinearLayout>
 
     <LinearLayout
@@ -25,11 +25,11 @@
         <Button
             style="@style/dashboardButton"
             android:text="@string/restore"
-            android:id="@+id/btnRestore" />
+            android:id="@+id/mRestoreButton" />
         <Button
             style="@style/dashboardButton"
             android:text="@string/exit"
-            android:id="@+id/btnExit" />
+            android:id="@+id/mExitButton" />
     </LinearLayout>
 
 </LinearLayout>

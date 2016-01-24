@@ -12,13 +12,13 @@ import hackspace.testtask.com.testtask.rssDataBase.RssContract.RssEntry;
 
 public class RssDownloadService extends IntentService {
 
-    private String finalUrl="http://lenta.ru/rss/news";
+    private String mUrl="http://lenta.ru/rss/news";
     public static final String SERVICE_UPDATING_BD = "hackspace.testtask.com.services.UPDATING";
     public static final String BD_UPDATED = "hackspace.testtask.com.services.UPDATED";
     public static final String SERVICE_FINISHED = "hackspace.testtask.com.services.FINISHED";
     public static final String SERVICE_ERROR = "ERROR";
 
-    private RssParser obj;
+    private RssParser mRssParser;
 
     public RssDownloadService() {
         super("RssDownloadService");
@@ -30,12 +30,12 @@ public class RssDownloadService extends IntentService {
             Intent intentToSend = new Intent(SERVICE_UPDATING_BD);
             sendBroadcast(intentToSend);
 
-            obj = new RssParser(finalUrl);
-            obj.fetchXML();
+            mRssParser = new RssParser(mUrl);
+            mRssParser.fetchXML();
 
-            while (obj.parsingComplete);
+            while (mRssParser.parsingComplete);
 
-            boolean isBdUpdated = RssBusiness.setRssItems(obj.getParsedItems(), this);
+            boolean isBdUpdated = RssBusiness.setRssItems(mRssParser.getParsedItems(), this);
 
             if (isBdUpdated) {
                 intentToSend = new Intent(BD_UPDATED);

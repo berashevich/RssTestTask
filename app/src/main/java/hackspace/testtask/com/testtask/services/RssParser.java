@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import hackspace.testtask.com.testtask.rss.RssItem;
 
 public class RssParser {
-    private ArrayList<RssItem> parsedItems = new ArrayList<>();
-    private String title = "";
-    private String description = "";
-    private String image = null;
-    private String urlString = null;
-    private XmlPullParserFactory xmlFactoryObject;
+    private ArrayList<RssItem> mParsedItems = new ArrayList<>();
+    private String mTitle = "";
+    private String mDescription = "";
+    private String mImage = null;
+    private String mUrl = null;
+    private XmlPullParserFactory mXmlFactoryObject;
     public volatile boolean parsingComplete = true;
 
     public RssParser(String url){
-        this.urlString = url;
+        this.mUrl = url;
     }
 
     public ArrayList<RssItem> getParsedItems() {
-        return parsedItems;
+        return mParsedItems;
     }
 
     public void parseXMLAndStoreIt(XmlPullParser myParser) {
@@ -50,25 +50,25 @@ public class RssParser {
 
                         if(name.equals("title")){
 
-                            if (title != "" && description != "") {
-                                parsedItems.add(new RssItem(title, description, image));
-                                title = "";
-                                description = "";
-                                image = null;
+                            if (mTitle != "" && mDescription != "") {
+                                mParsedItems.add(new RssItem(mTitle, mDescription, mImage));
+                                mTitle = "";
+                                mDescription = "";
+                                mImage = null;
                             }
 
-                            title = text;
+                            mTitle = text;
                         }
 
                         else if(name.equals("description")){
-                            description = text;
+                            mDescription = text;
                         }
 
-                        else if (name.equals("enclosure") && image == null) {
+                        else if (name.equals("enclosure") && mImage == null) {
                             attributeName = myParser.getAttributeName(0);
                             if (attributeName.equals("url")) {
                                 text = myParser.getAttributeValue(0);
-                                image = text;
+                                mImage = text;
                             }
                         }
 
@@ -92,20 +92,19 @@ public class RssParser {
             public void run() {
 
                 try {
-                    URL url = new URL(urlString);
+                    URL url = new URL(mUrl);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                    conn.setReadTimeout(10000 /* milliseconds */);
-                    conn.setConnectTimeout(15000 /* milliseconds */);
+                    conn.setReadTimeout(10000);
+                    conn.setConnectTimeout(15000);
                     conn.setRequestMethod("GET");
                     conn.setDoInput(true);
 
-                    // Starts the query
                     conn.connect();
                     InputStream stream = conn.getInputStream();
 
-                    xmlFactoryObject = XmlPullParserFactory.newInstance();
-                    XmlPullParser myparser = xmlFactoryObject.newPullParser();
+                    mXmlFactoryObject = XmlPullParserFactory.newInstance();
+                    XmlPullParser myparser = mXmlFactoryObject.newPullParser();
 
                     myparser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                     myparser.setInput(stream, null);

@@ -1,23 +1,23 @@
 package hackspace.testtask.com.testtask.rss;
 
 public class RssItem {
-    private String title;
-    private String description;
-    private String  image;
+    private String mTitle;
+    private String mDescription;
+    private String mImage;
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
     public String getDescription() {
-        return description;
+        return mDescription;
     }
     public String getImage() {
-        return image;
+        return mImage;
     }
 
     public RssItem(String title, String description, String image) {
-        this.title = title;
-        this.description = description;
-        this.image = image;
+        this.mTitle = title;
+        this.mDescription = description;
+        this.mImage = image;
     }
 }

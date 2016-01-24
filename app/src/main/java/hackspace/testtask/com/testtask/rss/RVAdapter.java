@@ -25,104 +25,105 @@ import hackspace.testtask.com.testtask.R;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
     public static class RssItemView extends RecyclerView.ViewHolder {
-        CardView cv;
-        TextView title;
-        TextView description;
-        ImageView image;
+        private CardView mCardView;
+        private TextView mTitle;
+        private TextView mDescription;
+        private ImageView mImage;
+
         RssItemView(final View itemView) {
             super(itemView);
 
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            title = (TextView)itemView.findViewById(R.id.title);
-            description = (TextView)itemView.findViewById(R.id.description);
-            image = (ImageView)itemView.findViewById(R.id.image);
+            mCardView = (CardView)itemView.findViewById(R.id.mCardView);
+            mTitle = (TextView)itemView.findViewById(R.id.mTitle);
+            mDescription = (TextView)itemView.findViewById(R.id.mDescription);
+            mImage = (ImageView)itemView.findViewById(R.id.mImage);
         }
 
-        public void selectRssItemView(CardView cv) {
-            cv.setCardBackgroundColor(0xFFC5D2C0);
-            cv.invalidate();
-            selectedRow = this.getPosition();
-            selectedCardView = cv;
+        public void selectRssItemView(CardView cardView) {
+            cardView.setCardBackgroundColor(0xFFC5D2C0);
+            cardView.invalidate();
+            sSelectedRow = this.getPosition();
+            sSelectedCardView = cardView;
         }
 
-        public static void deselectRssItemView(CardView cv) {
-            if (selectedCardView == null) {
+        public static void deselectRssItemView(CardView cardView) {
+            if (sSelectedCardView == null) {
                 return;
             }
-            cv.setCardBackgroundColor(0xfffffbfb);
-            cv.invalidate();
-            selectedRow = -1;
-            selectedCardView = null;
+            cardView.setCardBackgroundColor(0xfffffbfb);
+            cardView.invalidate();
+            sSelectedRow = -1;
+            sSelectedCardView = null;
         }
     }
 
-    static CardView selectedCardView = null;
-    static int selectedRow;
-    static List<RssItem> rssItems;
+    private static CardView sSelectedCardView = null;
+    private static int sSelectedRow;
+    private static List<RssItem> sRssItems;
     public RVAdapter(List<RssItem> rssItems) {
-        this.rssItems = rssItems;
+        this.sRssItems = rssItems;
     }
 
     @Override
     public int getItemCount() {
-        return rssItems.size();
+        return sRssItems.size();
     }
 
-    static Context context;
-    static ActionMode actionMode = null;
+    private static Context sContext;
+    private static ActionMode sActionMode = null;
 
     public static ActionMode getActionMode() {
-        return actionMode;
+        return sActionMode;
     }
 
     @Override
     public RssItemView onCreateViewHolder(final ViewGroup viewGroup, int i) {
-        context = viewGroup.getContext();
-        View v = LayoutInflater.from(context).inflate(R.layout.card_view, viewGroup, false);
+        sContext = viewGroup.getContext();
+        View newCardView = LayoutInflater.from(sContext).inflate(R.layout.card_view, viewGroup, false);
 
-        final RssItemView riv = new RssItemView(v);
+        final RssItemView newRssItemView = new RssItemView(newCardView);
 
-        v.setOnLongClickListener(new View.OnLongClickListener() {
+        newCardView.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View view) {
-                if (actionMode != null) {
+                if (sActionMode != null) {
                     return false;
                 }
-                actionMode = ((Activity) context).startActionMode(mActionModeCallback);
-                riv.selectRssItemView(riv.cv);
+                sActionMode = ((Activity) sContext).startActionMode(mActionModeCallback);
+                newRssItemView.selectRssItemView(newRssItemView.mCardView);
                 return true;
             }
         });
 
-        v.setOnClickListener(new View.OnClickListener() {
+        newCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (actionMode == null) {
+                if (sActionMode == null) {
                     return;
                 }
-                if (riv.cv == selectedCardView) {
-                    RssItemView.deselectRssItemView(selectedCardView);
+                if (newRssItemView.mCardView == sSelectedCardView) {
+                    RssItemView.deselectRssItemView(sSelectedCardView);
                 } else {
-                    RssItemView.deselectRssItemView(selectedCardView);
-                    riv.selectRssItemView(riv.cv);
+                    RssItemView.deselectRssItemView(sSelectedCardView);
+                    newRssItemView.selectRssItemView(newRssItemView.mCardView);
                 }
             }
         });
 
-        return riv;
+        return newRssItemView;
     }
 
     @Override
     public void onBindViewHolder(RssItemView rssItemView, int i) {
-        rssItemView.title.setText(rssItems.get(i).getTitle());
-        rssItemView.description.setText(rssItems.get(i).getDescription());
+        rssItemView.mTitle.setText(sRssItems.get(i).getTitle());
+        rssItemView.mDescription.setText(sRssItems.get(i).getDescription());
 
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        imageLoader.init(ImageLoaderConfiguration.createDefault(sContext));
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.image_stub)
                 .showImageForEmptyUri(R.drawable.image_empty)
                 .build();
-        imageLoader.displayImage(rssItems.get(i).getImage(), rssItemView.image, options);
+        imageLoader.displayImage(sRssItems.get(i).getImage(), rssItemView.mImage, options);
     }
 
     @Override
@@ -147,9 +148,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.deleteBtn:
-                    removeAt(selectedRow);
-                    selectedRow = -1;
+                case R.id.mDeleteButton:
+                    removeAt(sSelectedRow);
+                    sSelectedRow = -1;
                     break;
                 default:
                     break;
@@ -159,20 +160,20 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            actionMode = null;
-            RssItemView.deselectRssItemView(selectedCardView);
+            sActionMode = null;
+            RssItemView.deselectRssItemView(sSelectedCardView);
         }
     };
 
     public void removeAt(int position) {
-        if (rssItems.size() == 0) {
-            Toast.makeText(context, context.getString(R.string.nothing_to_delete), Toast.LENGTH_SHORT).show();
+        if (sRssItems.size() == 0) {
+            Toast.makeText(sContext, sContext.getString(R.string.nothing_to_delete), Toast.LENGTH_SHORT).show();
             return;
-        } else if (selectedRow == -1) {
+        } else if (sSelectedRow == -1) {
             return;
         }
-        rssItems = RssBusiness.delete(rssItems.get(position), context);
-        RssItemView.deselectRssItemView(selectedCardView);
+        sRssItems = RssBusiness.delete(sRssItems.get(position), sContext);
+        RssItemView.deselectRssItemView(sSelectedCardView);
         notifyItemRemoved(position);
     }
 }

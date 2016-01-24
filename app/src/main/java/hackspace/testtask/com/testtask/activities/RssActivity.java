@@ -25,11 +25,11 @@ import hackspace.testtask.com.testtask.rss.RVAdapter;
 import hackspace.testtask.com.testtask.services.RssDownloadService;
 
 public class RssActivity extends AppCompatActivity{
-    UpdateBdReceiver updateBdReceiver = null;
-    Boolean updateBdReceiverIsRegistered = false;
-    Boolean serviceIsRunning = false;
-    RecyclerView rv;
-    RVAdapter adapter;
+    private UpdateBdReceiver updateBdReceiver = null;
+    private Boolean updateBdReceiverIsRegistered = false;
+    private Boolean serviceIsRunning = false;
+    private RecyclerView mRecyclerView;
+    private RVAdapter mAdapter;
     private static final String SERVICE_IS_RUNNING = "hackspace.testtask.com.activities.SERVICE_IS_RUNNING";
 
     //TODO AL_PB You do not to pass Context in AsyncTask.
@@ -41,14 +41,14 @@ public class RssActivity extends AppCompatActivity{
         protected Void doInBackground(Context... contexts) {
             context = contexts[0];
             List<RssItem> rssItems = RssBusiness.getRssItems(context);
-            adapter = new RVAdapter(rssItems);
+            mAdapter = new RVAdapter(rssItems);
             publishProgress();
             return null;
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            rv.setAdapter(adapter);
+            mRecyclerView.setAdapter(mAdapter);
         }
 
         @Override
@@ -117,15 +117,15 @@ public class RssActivity extends AppCompatActivity{
 
         updateBdReceiver = new UpdateBdReceiver();
 
-        rv = (RecyclerView)findViewById(R.id.rv);
+        mRecyclerView = (RecyclerView)findViewById(R.id.mRecyclerView);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
+        mRecyclerView.setLayoutManager(llm);
 
         List<RssItem> rssItems = RssBusiness.getRssItems(this);
 
-        adapter = new RVAdapter(rssItems);
-        rv.setAdapter(adapter);
+        mAdapter = new RVAdapter(rssItems);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class RssActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
 
-        adapter.mActionModeCallback.onDestroyActionMode(RVAdapter.getActionMode());
+        mAdapter.mActionModeCallback.onDestroyActionMode(RVAdapter.getActionMode());
     }
 
     @Override
@@ -180,7 +180,7 @@ public class RssActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refreshBtn:
+            case R.id.mRefreshButton:
                 if (serviceIsRunning) break;
 
                 Intent intent = new Intent(this, RssDownloadService.class);

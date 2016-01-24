@@ -36,10 +36,10 @@ import hackspace.testtask.com.testtask.rss.RssBusiness;
 import hackspace.testtask.com.testtask.rss.RssItem;
 
 public class DashboardActivity extends AppCompatActivity {
-    // TODO SM_PB: [naming] 1.split to multiple lines! ALWAWS 2. btnRss -> mRssButton (all views are named up to logic: m_NAME_TYPE)
-    // AL_PB Please see the link below: https://source.android.com/source/code-style.html
-    // Best practice is using PRIVATE modifier in most cases see MacConnel "Code Complete" page 238.
-    Button btnRss, btnBackup, btnRestore, btnExit;
+    private Button mRssButton;
+    private Button mBackupButton;
+    private Button mRestoreButton;
+    private Button mExitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +47,14 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         // TODO SM_PB: create initViews(for field initialization + findViewById) & initListeners(for setting listeners onClick/onTouch/.. events)
-        btnRss = (Button) findViewById(R.id.btnRss);
-        btnRss.setOnClickListener(btnListener);
-        btnBackup = (Button) findViewById(R.id.btnBackup);
-        btnBackup.setOnClickListener(btnListener);
-        btnRestore = (Button) findViewById(R.id.btnRestore);
-        btnRestore.setOnClickListener(btnListener);
-        btnExit = (Button) findViewById(R.id.btnExit);
-        btnExit.setOnClickListener(btnListener);
+        mRssButton = (Button) findViewById(R.id.mRssButton);
+        mRssButton.setOnClickListener(mButtonListener);
+        mBackupButton = (Button) findViewById(R.id.mBackupButton);
+        mBackupButton.setOnClickListener(mButtonListener);
+        mRestoreButton = (Button) findViewById(R.id.mRestoreButton);
+        mRestoreButton.setOnClickListener(mButtonListener);
+        mExitButton = (Button) findViewById(R.id.mExitButton);
+        mExitButton.setOnClickListener(mButtonListener);
     }
 
  // TODO SM_PB: initialization structure
@@ -64,21 +64,21 @@ public class DashboardActivity extends AppCompatActivity {
 //    methods
 
  // TODO SM_PB:where is private/public/protected?
-    OnClickListener btnListener = new OnClickListener() {
+    private OnClickListener mButtonListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btnRss:
+                case R.id.mRssButton:
                     Intent intent = new Intent(DashboardActivity.this, RssActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.btnBackup:
+                case R.id.mBackupButton:
                     backup();
                     break;
-                case R.id.btnRestore:
+                case R.id.mRestoreButton:
                     restore();
                     break;
-                case R.id.btnExit:
+                case R.id.mExitButton:
                     finish();
                  // TODO SM_PB: break; + default must be here - that's a rule
             }
