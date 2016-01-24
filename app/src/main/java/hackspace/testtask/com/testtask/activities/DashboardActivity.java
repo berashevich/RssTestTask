@@ -36,6 +36,7 @@ import hackspace.testtask.com.testtask.rss.RssBusiness;
 import hackspace.testtask.com.testtask.rss.RssItem;
 
 public class DashboardActivity extends AppCompatActivity {
+    private final static String FILE_NAME = "rss.json";
     private Button mRssButton;
     private Button mBackupButton;
     private Button mRestoreButton;
@@ -119,13 +120,11 @@ public class DashboardActivity extends AppCompatActivity {
 
     //TODO AL_PB Possible resource leak Stream never closed, see comment above.
     public void restore() {
-        String filename = getString(R.string.file_name); // TODO SM_PB: :) file name must not be internationalized ) it must be a java constant
-
         List<RssItem> rssItems = new ArrayList<>();
         Gson gson = new Gson();
 
         try {
-            FileInputStream fis = this.openFileInput(filename);
+            FileInputStream fis = this.openFileInput(FILE_NAME);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader bufferedReader = new BufferedReader(isr);
 
