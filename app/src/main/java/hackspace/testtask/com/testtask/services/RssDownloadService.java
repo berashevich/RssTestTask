@@ -11,14 +11,13 @@ import hackspace.testtask.com.testtask.rssDataBase.RssDbHelper;
 import hackspace.testtask.com.testtask.rssDataBase.RssContract.RssEntry;
 
 public class RssDownloadService extends IntentService {
-
-    private String mUrl="http://lenta.ru/rss/news";
     public static final String SERVICE_UPDATING_BD = "hackspace.testtask.com.services.UPDATING";
     public static final String BD_UPDATED = "hackspace.testtask.com.services.UPDATED";
     public static final String SERVICE_FINISHED = "hackspace.testtask.com.services.FINISHED";
     public static final String SERVICE_ERROR = "ERROR";
 
     private RssParser mRssParser;
+    private String mUrl="http://lenta.ru/rss/news";
 
     public RssDownloadService() {
         super("RssDownloadService");

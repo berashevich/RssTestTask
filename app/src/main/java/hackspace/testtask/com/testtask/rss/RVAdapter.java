@@ -24,6 +24,12 @@ import java.util.List;
 import hackspace.testtask.com.testtask.R;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
+    private static CardView sSelectedCardView = null;
+    private static int sSelectedRow;
+    private static List<RssItem> sRssItems;
+    private static Context sContext;
+    private static ActionMode sActionMode = null;
+
     public static class RssItemView extends RecyclerView.ViewHolder {
         private CardView mCardView;
         private TextView mTitle;
@@ -57,23 +63,54 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
         }
     }
 
-    private static CardView sSelectedCardView = null;
-    private static int sSelectedRow;
-    private static List<RssItem> sRssItems;
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_rss_action_mode, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.mDeleteButton:
+                    removeAt(sSelectedRow);
+                    sSelectedRow = -1;
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            sActionMode = null;
+            RssItemView.deselectRssItemView(sSelectedCardView);
+        }
+    };
+
     public RVAdapter(List<RssItem> rssItems) {
         this.sRssItems = rssItems;
+    }
+
+    public static ActionMode getActionMode() {
+        return sActionMode;
+    }
+    public ActionMode.Callback getActionModeCallback() {
+        return mActionModeCallback;
     }
 
     @Override
     public int getItemCount() {
         return sRssItems.size();
-    }
-
-    private static Context sContext;
-    private static ActionMode sActionMode = null;
-
-    public static ActionMode getActionMode() {
-        return sActionMode;
     }
 
     @Override
@@ -130,40 +167,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
-    public ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.menu_rss_action_mode, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.mDeleteButton:
-                    removeAt(sSelectedRow);
-                    sSelectedRow = -1;
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            sActionMode = null;
-            RssItemView.deselectRssItemView(sSelectedCardView);
-        }
-    };
 
     public void removeAt(int position) {
         if (sRssItems.size() == 0) {

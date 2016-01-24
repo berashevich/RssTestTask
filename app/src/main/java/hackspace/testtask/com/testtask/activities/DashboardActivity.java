@@ -41,29 +41,6 @@ public class DashboardActivity extends AppCompatActivity {
     private Button mRestoreButton;
     private Button mExitButton;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-
-        // TODO SM_PB: create initViews(for field initialization + findViewById) & initListeners(for setting listeners onClick/onTouch/.. events)
-        mRssButton = (Button) findViewById(R.id.mRssButton);
-        mRssButton.setOnClickListener(mButtonListener);
-        mBackupButton = (Button) findViewById(R.id.mBackupButton);
-        mBackupButton.setOnClickListener(mButtonListener);
-        mRestoreButton = (Button) findViewById(R.id.mRestoreButton);
-        mRestoreButton.setOnClickListener(mButtonListener);
-        mExitButton = (Button) findViewById(R.id.mExitButton);
-        mExitButton.setOnClickListener(mButtonListener);
-    }
-
- // TODO SM_PB: initialization structure
-//    static fields
-//    fields
-//    consturctor
-//    methods
-
- // TODO SM_PB:where is private/public/protected?
     private OnClickListener mButtonListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -80,10 +57,26 @@ public class DashboardActivity extends AppCompatActivity {
                     break;
                 case R.id.mExitButton:
                     finish();
-                 // TODO SM_PB: break; + default must be here - that's a rule
+                    // TODO SM_PB: break; + default must be here - that's a rule
             }
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+
+        // TODO SM_PB: create initViews(for field initialization + findViewById) & initListeners(for setting listeners onClick/onTouch/.. events)
+        mRssButton = (Button) findViewById(R.id.mRssButton);
+        mRssButton.setOnClickListener(mButtonListener);
+        mBackupButton = (Button) findViewById(R.id.mBackupButton);
+        mBackupButton.setOnClickListener(mButtonListener);
+        mRestoreButton = (Button) findViewById(R.id.mRestoreButton);
+        mRestoreButton.setOnClickListener(mButtonListener);
+        mExitButton = (Button) findViewById(R.id.mExitButton);
+        mExitButton.setOnClickListener(mButtonListener);
+    }
 
     public void backup() {
         String filename = getString(R.string.file_name);

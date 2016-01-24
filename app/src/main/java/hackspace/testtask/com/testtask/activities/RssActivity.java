@@ -25,12 +25,12 @@ import hackspace.testtask.com.testtask.rss.RVAdapter;
 import hackspace.testtask.com.testtask.services.RssDownloadService;
 
 public class RssActivity extends AppCompatActivity{
+    private static final String SERVICE_IS_RUNNING = "hackspace.testtask.com.activities.SERVICE_IS_RUNNING";
     private UpdateBdReceiver updateBdReceiver = null;
     private Boolean updateBdReceiverIsRegistered = false;
     private Boolean serviceIsRunning = false;
     private RecyclerView mRecyclerView;
     private RVAdapter mAdapter;
-    private static final String SERVICE_IS_RUNNING = "hackspace.testtask.com.activities.SERVICE_IS_RUNNING";
 
     //TODO AL_PB You do not to pass Context in AsyncTask.
     //Init UI components in onCreate activity method. (new adapter, and setAdapter)
@@ -58,16 +58,17 @@ public class RssActivity extends AppCompatActivity{
 
     class UpdateBdReceiver extends BroadcastReceiver
     {
-        ProgressDialog pd = null;
+        private ProgressDialog mProgressDialog = null;
+
         @Override
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
             if (action.equalsIgnoreCase(RssDownloadService.SERVICE_UPDATING_BD)){
 
-                    pd = new ProgressDialog(context);
-                    pd.setMessage(getString(R.string.please_wait));
-                    pd.show();
+                mProgressDialog = new ProgressDialog(context);
+                mProgressDialog.setMessage(getString(R.string.please_wait));
+                mProgressDialog.show();
 
                 serviceIsRunning = true;
 
@@ -75,7 +76,7 @@ public class RssActivity extends AppCompatActivity{
                 new UpdateRecycleViewTask().execute(context);
 
             } else if (action.equalsIgnoreCase(RssDownloadService.SERVICE_FINISHED))  {
-                pd.dismiss();
+                mProgressDialog.dismiss();
 
                 if (intent.getStringExtra(RssDownloadService.SERVICE_ERROR) != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -168,7 +169,7 @@ public class RssActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
 
-        mAdapter.mActionModeCallback.onDestroyActionMode(RVAdapter.getActionMode());
+        mAdapter.getActionModeCallback().onDestroyActionMode(RVAdapter.getActionMode());
     }
 
     @Override
