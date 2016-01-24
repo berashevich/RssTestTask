@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- TODO Al_PB Why you using custom style_dashboard_button.xml etc.. res, instead of default style.xml file ? -->
     <LinearLayout
         style="@style/dashboardLayout"
         android:paddingTop="50dp">

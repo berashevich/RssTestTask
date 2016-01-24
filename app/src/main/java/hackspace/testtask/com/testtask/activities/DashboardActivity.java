@@ -36,6 +36,9 @@ import hackspace.testtask.com.testtask.rss.RssBusiness;
 import hackspace.testtask.com.testtask.rss.RssItem;
 
 public class DashboardActivity extends AppCompatActivity {
+    // TODO SM_PB: [naming] 1.split to multiple lines! ALWAWS 2. btnRss -> mRssButton (all views are named up to logic: m_NAME_TYPE)
+    // AL_PB Please see the link below: https://source.android.com/source/code-style.html
+    // Best practice is using PRIVATE modifier in most cases see MacConnel "Code Complete" page 238.
     Button btnRss, btnBackup, btnRestore, btnExit;
 
     @Override
@@ -43,6 +46,7 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        // TODO SM_PB: create initViews(for field initialization + findViewById) & initListeners(for setting listeners onClick/onTouch/.. events)
         btnRss = (Button) findViewById(R.id.btnRss);
         btnRss.setOnClickListener(btnListener);
         btnBackup = (Button) findViewById(R.id.btnBackup);
@@ -53,6 +57,13 @@ public class DashboardActivity extends AppCompatActivity {
         btnExit.setOnClickListener(btnListener);
     }
 
+ // TODO SM_PB: initialization structure
+//    static fields
+//    fields
+//    consturctor
+//    methods
+
+ // TODO SM_PB:where is private/public/protected?
     OnClickListener btnListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -69,6 +80,7 @@ public class DashboardActivity extends AppCompatActivity {
                     break;
                 case R.id.btnExit:
                     finish();
+                 // TODO SM_PB: break; + default must be here - that's a rule
             }
         }
     };
@@ -80,6 +92,11 @@ public class DashboardActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String rssItemInJson;
 
+        //TODO AL_PB Possible resource leak outputStream never closed.
+        //you can use try with resources in Java 1.7.+ like this:
+        // try (FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE)){
+        //     .....
+        // }
         try {
             this.deleteFile(filename);
             FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
@@ -105,8 +122,9 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    //TODO AL_PB Possible resource leak Stream never closed, see comment above.
     public void restore() {
-        String filename = getString(R.string.file_name);
+        String filename = getString(R.string.file_name); // TODO SM_PB: :) file name must not be internationalized ) it must be a java constant
 
         List<RssItem> rssItems = new ArrayList<>();
         Gson gson = new Gson();

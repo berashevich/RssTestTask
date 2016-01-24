@@ -11,6 +11,7 @@ import java.util.List;
 
 import hackspace.testtask.com.testtask.rssDataBase.RssDbHelper;
 
+//TODO AL_PB Why you using static methods of instead new Instance().methodName() ?
 public class RssBusiness {
     private static List<RssItem> rssItems;
 
@@ -76,7 +77,8 @@ public class RssBusiness {
 
         String selection = RssEntry.COLUMN_NAME_TITLE + " LIKE ?";
         String[] selectionArgs = { rssItem.getTitle() };
-        int delCount = db.delete(RssEntry.TABLE_NAME, selection, selectionArgs);
+
+        db.delete(RssEntry.TABLE_NAME, selection, selectionArgs);
 
         rssItems.remove(rssItem);
         return rssItems;

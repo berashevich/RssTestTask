@@ -32,6 +32,8 @@ public class RssActivity extends AppCompatActivity{
     RVAdapter adapter;
     private static final String SERVICE_IS_RUNNING = "hackspace.testtask.com.activities.SERVICE_IS_RUNNING";
 
+    //TODO AL_PB You do not to pass Context in AsyncTask.
+    //Init UI components in onCreate activity method. (new adapter, and setAdapter)
     private class UpdateRecycleViewTask extends AsyncTask<Context, Void, Void> {
         Context context;
 
