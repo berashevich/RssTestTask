@@ -188,6 +188,8 @@ public class RssActivity extends AppCompatActivity{
                 startService(intent);
 
                 break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

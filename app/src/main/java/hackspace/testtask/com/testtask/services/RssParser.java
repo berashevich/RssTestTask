@@ -73,6 +73,8 @@ public class RssParser {
                         }
 
                         break;
+                    default:
+                        break;
                 }
 
                 event = myParser.next();
