@@ -82,28 +82,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void backup() {
-        String filename = getString(R.string.file_name);
-
         List<RssItem> rssItems = RssBusiness.getRssItems(this);
         Gson gson = new Gson();
         String rssItemInJson;
 
-        //TODO AL_PB Possible resource leak outputStream never closed.
-        //you can use try with resources in Java 1.7.+ like this:
-        // try (FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE)){
-        //     .....
-        // }
-        try {
-            this.deleteFile(filename);
-            FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            BufferedWriter bfWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+        this.deleteFile(FILE_NAME);
+        try (FileOutputStream outputStream = openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
+             BufferedWriter bfWriter = new BufferedWriter(new OutputStreamWriter(outputStream))) {
 
             for (RssItem rssItem : rssItems) {
                 rssItemInJson = gson.toJson(rssItem);
                 bfWriter.write(rssItemInJson);
                 bfWriter.newLine();
             }
-            bfWriter.close();
+
             Toast.makeText(DashboardActivity.this, getString(R.string.backuped), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -118,15 +110,13 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    //TODO AL_PB Possible resource leak Stream never closed, see comment above.
     public void restore() {
         List<RssItem> rssItems = new ArrayList<>();
         Gson gson = new Gson();
 
-        try {
-            FileInputStream fis = this.openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
+        try (FileInputStream fis = this.openFileInput(FILE_NAME);
+             InputStreamReader isr = new InputStreamReader(fis);
+             BufferedReader bufferedReader = new BufferedReader(isr)) {
 
             String rssItemFromJson;
             while ((rssItemFromJson = bufferedReader.readLine()) != null) {
@@ -135,7 +125,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
             RssBusiness.setRssItems(rssItems, this);
 
-            bufferedReader.close();
             Toast.makeText(DashboardActivity.this, getString(R.string.restored), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

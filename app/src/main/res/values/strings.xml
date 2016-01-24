@@ -15,6 +15,4 @@
     <string name="refresh">Refresh</string>
     <string name="delete">Delete</string>
     <string name="nothing_to_delete">Nothing to delete!</string>
-
-    <string name="file_name">rss.json</string>
 </resources>

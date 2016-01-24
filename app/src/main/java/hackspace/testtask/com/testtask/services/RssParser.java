@@ -3,6 +3,8 @@ package hackspace.testtask.com.testtask.services;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -81,9 +83,7 @@ public class RssParser {
             }
 
             parsingComplete = false;
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -92,30 +92,40 @@ public class RssParser {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run() {
+                HttpURLConnection conn = null;
+                InputStream stream = null;
 
                 try {
                     URL url = new URL(mUrl);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
+                    conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000);
                     conn.setConnectTimeout(15000);
                     conn.setRequestMethod("GET");
                     conn.setDoInput(true);
-
                     conn.connect();
-                    InputStream stream = conn.getInputStream();
 
+                    stream = conn.getInputStream();
                     mXmlFactoryObject = XmlPullParserFactory.newInstance();
                     XmlPullParser myparser = mXmlFactoryObject.newPullParser();
-
                     myparser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                     myparser.setInput(stream, null);
-
                     parseXMLAndStoreIt(myparser);
-                    stream.close();
-                }
 
-                catch (Exception e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+
+                    try {
+                        if (stream != null) {
+                            stream.close();
+                        }
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
+                    }
                 }
             }
         });
