@@ -149,6 +149,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RssItemView>{
         return newRssItemView;
     }
 
+    public void addAll(List<RssItem> items) {
+        if(sRssItems != null) {
+            sRssItems.clear();
+            sRssItems.addAll(items);
+            notifyDataSetChanged();
+        }
+
+    }
+
     @Override
     public void onBindViewHolder(RssItemView rssItemView, int i) {
         rssItemView.mTitle.setText(sRssItems.get(i).getTitle());

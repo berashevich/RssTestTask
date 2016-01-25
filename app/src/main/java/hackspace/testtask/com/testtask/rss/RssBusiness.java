@@ -71,7 +71,6 @@ public class RssBusiness {
         RssDbHelper mDbHelper = new RssDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-
         String selection = RssEntry.COLUMN_NAME_TITLE + " LIKE ?";
         String[] selectionArgs = { rssItem.getTitle() };
 

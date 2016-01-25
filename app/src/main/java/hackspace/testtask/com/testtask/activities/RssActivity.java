@@ -32,27 +32,21 @@ public class RssActivity extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private RVAdapter mAdapter;
 
-    //TODO AL_PB You do not to pass Context in AsyncTask.
-    //Init UI components in onCreate activity method. (new adapter, and setAdapter)
-    private class UpdateRecycleViewTask extends AsyncTask<Context, Void, Void> {
-        Context context;
-
+    private class UpdateRecycleViewTask extends AsyncTask<Void, Void, List<RssItem>> {
         @Override
-        protected Void doInBackground(Context... contexts) {
-            context = contexts[0];
-            List<RssItem> rssItems = new RssBusiness().getRssItems(context);
-            mAdapter = new RVAdapter(rssItems);
+        protected List<RssItem> doInBackground(Void... values) {
+            List<RssItem> rssItems = new RssBusiness().getRssItems(getApplicationContext());
             publishProgress();
-            return null;
+            return rssItems;
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            mRecyclerView.setAdapter(mAdapter);
         }
 
         @Override
-        protected void onPostExecute(Void value) {
+        protected void onPostExecute(List<RssItem> items) {
+            mAdapter.addAll(items);
         }
     }
 
@@ -73,7 +67,7 @@ public class RssActivity extends AppCompatActivity{
                 serviceIsRunning = true;
 
             } else if (action.equalsIgnoreCase(RssDownloadService.BD_UPDATED)) {
-                new UpdateRecycleViewTask().execute(context);
+                new UpdateRecycleViewTask().execute();
 
             } else if (action.equalsIgnoreCase(RssDownloadService.SERVICE_FINISHED))  {
                 mProgressDialog.dismiss();
