@@ -70,18 +70,25 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // TODO SM_PB: create initViews(for field initialization + findViewById) & initListeners(for setting listeners onClick/onTouch/.. events)
+        initViews();
+        initListeners();
+    }
+
+    private void initViews() {
         mRssButton = (Button) findViewById(R.id.mRssButton);
-        mRssButton.setOnClickListener(mButtonListener);
         mBackupButton = (Button) findViewById(R.id.mBackupButton);
-        mBackupButton.setOnClickListener(mButtonListener);
         mRestoreButton = (Button) findViewById(R.id.mRestoreButton);
-        mRestoreButton.setOnClickListener(mButtonListener);
         mExitButton = (Button) findViewById(R.id.mExitButton);
+    }
+
+    private void initListeners() {
+        mRssButton.setOnClickListener(mButtonListener);
+        mBackupButton.setOnClickListener(mButtonListener);
+        mRestoreButton.setOnClickListener(mButtonListener);
         mExitButton.setOnClickListener(mButtonListener);
     }
 
-    public void backup() {
+    private void backup() {
         List<RssItem> rssItems = new RssBusiness().getRssItems(this);
         Gson gson = new Gson();
         String rssItemInJson;
@@ -110,7 +117,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    public void restore() {
+    private void restore() {
         List<RssItem> rssItems = new ArrayList<>();
         Gson gson = new Gson();
 
